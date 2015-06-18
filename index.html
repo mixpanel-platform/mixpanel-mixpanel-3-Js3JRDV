@@ -48,10 +48,11 @@
                 /* Format data */  
                 
                 _.each(datums, function(datum){
-                    results.push(datum.values()['results'])
+                    results.push(datum.values()['results']);
                 });
             }).then(function(){
                 runQuery(results);
+                graphData();
             });
             
         });
@@ -65,7 +66,9 @@
             var propkeys = Object.keys(current_user['$properties']);
             for(j=0; j<propkeys.length; j++) {
               masterUsers[current_user['$distinct_id']][propkeys[j]] = current_user['$properties'][propkeys[j]];
-              if(masterProps.indexOf(propkeys[j]) < 0) {
+              if($.inArray(propkeys[j], masterProps)) {
+                //do nothing
+              } else { 
                 masterProps.push(propkeys[j]);
               }
             }

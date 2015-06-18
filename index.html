@@ -90,9 +90,10 @@
             var append_data = '<tr>';
             for(j=0; j<masterProps.length; j++) {
               var user_keys = Object.keys(masterUsers[users[i]]);
-              if(masterProps[j] in user_keys) {
+              console.log(user_keys);
+              try {
                 append_data = append_data + '<td>' + masterUsers[users[i]][masterProps[j]] + '</td>';
-              } else {
+              } catch(err) {
                 append_data = append_data + '<td>' + ' ' + '</td>';
               }
             }

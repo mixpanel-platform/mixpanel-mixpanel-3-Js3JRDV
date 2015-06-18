@@ -7,44 +7,97 @@
     <script src="https://cdn.mxpnl.com/libs/mixpanel-platform/build/mixpanel-platform.v0.latest.min.js"></script>
   </head>
   <body class="mixpanel-platform-body">
-    <div class="mixpanel-platform-section">
-      <div id="eventSelect" style="float: left;"></div>
-      <div id="by" class="mixpanel-platform-label" style="margin-left: 10px; display: none;">by</div>
-      <div id="propSelect" style="float: left;"></div>
-      <div id="dateSelect" style="float: right;"></div>
-      <div style="clear: both;"></div>
-      <div id="graph"></div>
-    </div>
-    <div id="table"></div>
+    <form id="property" style="margin-bottom: 15px; height: 31px">
+        <input type="text" autofocus placeholder="List Of Emails" name="property-name-field" value="" style="color: rgb(95,105,131); height: 30px; width: 500px; padding: 0 4px; font-size: 12px; border: 1px solid rgb(201,209,219)">
+        <input type="submit" name="submit" value="Run" style="font-weight: bold; color: rgb(95,105,131); font-size: 12px; height: 31px; padding: 0 10px; margin-left: 10px; border: 1px solid rgb(201,209,219); background-color: rgb(242,244,246)">
+      </form>
+      <div>
+        <table id="resultsTable"></table>
+      </div>
     <script>
-      var eventSelect = $('#eventSelect').MPEventSelect();
-      var propSelect  = $('#propSelect').MPPropertySelect();
-      var dateSelect  = $('#dateSelect').MPDatepicker();
-      var eventGraph  = $('#graph').MPChart({chartType: 'line'});
-      var eventTable  = $('#table').MPTable({
-        showPercentages: true,
-        firstColHeader: 'Event'
-      });
-
-      var runQuery = function() {
-        var eventName = eventSelect.MPEventSelect('value'),
-            propName  = propSelect.MPPropertySelect('value'),
-            dateRange = dateSelect.MPDatepicker('value');
-
-        if (eventName) {
-          MP.api.segment(eventName, propName, dateRange).done(function(results) {
-            eventGraph.MPChart('setData', results);
-            eventTable.MPTable('setData', results);
-          });
+    
+    var masterUsers = {};
+    var masterProps = {};
+    
+      MP.api.ready(function() {
+        /* pull values out of form */
+         $('#property').submit(function(e) {
+            $('#lgr-chart').remove();
+            e.preventDefault();
+            var formData = $('#property input:first').val()
+            var listOfEmails = formData.split(' ');
+            var i;
+            var chartEvent = 'Viewed report';
+            var chartData = {};
+            
+            /* Make API Request for emails */
+            var promises = [];
+            var params = {
+                where: '' 
+            }
+            var results = [];
+            for (i = 0; i < listOfEmails.length; i++){
+              
+                /* change params to include email */ 
+                params.where = '"' + listOfEmails[i] + '"' + ' in properties["$email"]';
+                var peopleQuery = MP.api.people(params);
+                promises.push(peopleQuery); 
+          
+            }
+            Promise.all(promises).then(function(datums){
+                /* Format data */  
+                
+                _.each(datums, function(datum){
+                    results.push(datum.values()['results'])
+                });
+            }).then(function(){
+                runQuery(results);
+            });
+            
+        });
+        
+        var runQuery = function(data) {
+          console.log(data);
+          var keys = Object.keys(data);
+          for(i=0; i<keys.length; i++) {
+            var current_user = data[0][i];
+            masterUsers[current_user['$distinct_id']] = {};
+            var propkeys = Object.keys(current_user['$properties']);
+            for(j=0; j<propkeys.length; j++) {
+              masterUsers[current_user['$distinct_id']][propkeys[j]] = current_user['$properties'][propkeys[j]];
+              if(masterProps.indexOf(propkeys[j]) < 0) {
+                masterProps.push(propkeys[j]);
+              }
+            }
+          }
         }
-      };
-      eventSelect.on('change', function(e, eventName) {
-        propSelect.MPPropertySelect('setEvent', eventName);
-        $("#by").show();
-        runQuery();
+        
+        var graphData = function() {
+          //write the headers first
+          var append_data = '<tr>';
+          for(i=0; i<masterProps.length; i++) {
+            append_data = append_data + '<td>' + masterProps[i] + '</td>';
+          }
+          append_data = append_data + '</tr>';
+          ('table#resultsTable').append(append_data);
+          
+          //now write each user
+          var users = Object.keys(masterUsers);
+          for(i=0; i<users.length; i++) {
+            var append_data = '<tr>';
+            for(j=0; j<masterProps.length; j++) {
+              if(masterProps[j] in Object.keys(masterUsers[i])) {
+                append_data = append_data + + '<td>' + masterUsers[i][masterProps[j]] + '</td>';
+              }
+              else {
+                append_data = append_data + + '<td>' + ' ' + '</td>';
+              }
+            }
+            ('table#resultsTable').append(append_data);
+          }
+        }
+        
       });
-      propSelect.on('change', runQuery);
-      dateSelect.on('change', runQuery);
     </script>
   </body>
 </html>

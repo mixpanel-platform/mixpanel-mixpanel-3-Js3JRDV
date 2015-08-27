@@ -74,8 +74,9 @@
           
             promises.push(MP.api.people(params));
             
-            if(page < total) {
-              largePeople(page + 1);
+            while(page < total) {
+              params['page'] += 1;
+              promises.push(MP.api.people(params));
             }
             
             Promise.all(promises).then(function(datums){

@@ -43,7 +43,7 @@
                 /* change params to include email */ 
                 params.where = '"' + listOfEmails[i] + '"' + ' in properties["$email"]';
                 peopleQuery = MP.api.query('/api/2.0/engage/', params, {dataType: 'json'}).done(function(results) {
-                  if(results['total'] > 1){
+                  if(results['total'] > 1000){
                     // more than 1000
                     // params['session_id'] = results['session_id'];
                     total = params['total'];

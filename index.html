@@ -70,6 +70,8 @@
         }
         
         var largePeople = function(page) {
+            params['page'] = page;
+          
             promises.push(MP.api.people(params));
             
             if(page < total) {
@@ -98,7 +100,7 @@
             masterUsers[current_user['$distinct_id']] = {};
             var propkeys = Object.keys(current_user['$properties']);
             for(j=0; j<propkeys.length; j++) {
-              masterUsers[current_user['$distinct_id']][propkeys[j]] = current_user['$properties'][propkeys[j]];
+              masterUsers[current_user['$distinct_id']][propkeys[j]] = current_user['$properties'][propkeys[j]].toString();
               if(masterProps.indexOf(propkeys[j]) < 0) {
                 masterProps.push(propkeys[j]);
               }

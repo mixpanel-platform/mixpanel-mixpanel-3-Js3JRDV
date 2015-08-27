@@ -53,12 +53,7 @@
                     setTimeout(smallPeople(), 1000);
                   }
                 });
-                //console.log(peopleQuery);
-                //console.log(peopleQuery.values());
-                //promises.push(peopleQuery); 
-          
             }
-            
         });
         
         var smallPeople = function() {
@@ -68,8 +63,6 @@
             promises.push(MP.api.people(params));
             Promise.all(promises).then(function(datums){
                 /* Format data */
-                
-                console.log(datums);
                 
                 _.each(datums, function(datum){
                     results.push(datum.values()['results']);
@@ -92,8 +85,6 @@
             
             Promise.all(promises).then(function(datums){
                 /* Format data */
-                
-                console.log(datums);
                 
                 _.each(datums, function(datum){
                     results.push(datum.values()['results']);
@@ -128,16 +119,13 @@
           }
           append_data = append_data + '</tr>';
           $('#table').append(append_data);
-          console.log(append_data);
           
           //now write each user
           var users = Object.keys(masterUsers);
-          console.log(users);
           for(i=0; i<users.length; i++) {
             var append_data = '<tr>';
             for(j=0; j<masterProps.length; j++) {
               var user_keys = Object.keys(masterUsers[users[i]]);
-              console.log(user_keys);
               try {
                 append_data = append_data + '<td>' + masterUsers[users[i]][masterProps[j]] + '</td>';
               } catch(err) {
@@ -145,7 +133,6 @@
               }
             }
             append_data = append_data + '</tr>';
-            console.log(append_data);
             $('#table').append(append_data);
           }
         }

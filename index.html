@@ -85,7 +85,7 @@
            /* Make API Request for emails */
             var promises = [];
             
-            for(i=1; i<total+1, i++) {
+            for(i=1; i<total, i++) {
               params['page'] = i;
               promises.push(MP.api.people(params));
             }

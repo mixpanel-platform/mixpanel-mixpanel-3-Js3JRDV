@@ -68,7 +68,7 @@
             Promise.all(promises).then(function(datums){
                 /* Format data */
                 
-                console.log(datums);
+                console.log(datums.values());
                 
                 _.each(datums, function(datum){
                     results.push(datum.values()['results']);

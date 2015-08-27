@@ -41,7 +41,8 @@
               
                 /* change params to include email */ 
                 params.where = '"' + listOfEmails[i] + '"' + ' in properties["$email"]';
-                var peopleQuery = MP.api.people(params);
+                var peopleQuery = MP.api.query('/engage', params);
+                console.log(peopleQuery);
                 promises.push(peopleQuery); 
           
             }

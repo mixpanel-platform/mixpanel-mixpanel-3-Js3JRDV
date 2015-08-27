@@ -74,6 +74,8 @@
             var promises = [];
             var results = [];
             
+            promises.push(MP.api.people(params));
+            
             for(i=1; i<total; i++) {
               params['page'] = i;
               promises.push(MP.api.people(params));

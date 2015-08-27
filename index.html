@@ -19,6 +19,7 @@
     
     var masterUsers = {};
     var masterProps = [];
+    var total = 0;
     
       MP.api.ready(function() {
         /* pull values out of form */
@@ -47,14 +48,11 @@
                   if(results['total'] > 1){
                     // more than 1000
                     params['session_id'] = results['session_id'];
-                    for(i=1; i<results['total']; i++) {
-                      params['page'] = i;
-                      promises.push(MP.api.people(params));
-                    }
+                    total = params['total'];
+                    setTimeout(largePeople(), 1000);
                   } else {
                     //1000 or less
-                    console.log(params);
-                    promises.push(MP.api.people(params));
+                    setTimeout(smallPeople(), 1000);
                   }
                 });
                 //console.log(peopleQuery);
@@ -62,6 +60,13 @@
                 //promises.push(peopleQuery); 
           
             }
+            
+        });
+        
+        var smallPeople = function() {
+          /* Make API Request for emails */
+            var promises = [];
+            promises.push(MP.api.people(params));
             Promise.all(promises).then(function(datums){
                 /* Format data */
                 
@@ -74,8 +79,30 @@
                 runQuery(results);
                 setTimeout(graphData(), 10000);
             });
+        }
+        
+        var largePeople = function() {
+           /* Make API Request for emails */
+            var promises = [];
             
-        });
+            for(i=1; i<total+1, i++) {
+              params['page'] = i;
+              promises.push(MP.api.people(params));
+            }
+            
+            Promise.all(promises).then(function(datums){
+                /* Format data */
+                
+                console.log(datums);
+                
+                _.each(datums, function(datum){
+                    results.push(datum.values()['results']);
+                });
+            }).then(function(){
+                runQuery(results);
+                setTimeout(graphData(), 10000);
+            });
+        }
         
         var runQuery = function(data) {
           console.log(data);

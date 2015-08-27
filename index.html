@@ -41,10 +41,10 @@
               
                 /* change params to include email */ 
                 params.where = '"' + listOfEmails[i] + '"' + ' in properties["$email"]';
-                peopleQuery = MP.api.query('/api/2.0/engage/', params, {dataType: 'json'}).done(results) {
+                peopleQuery = MP.api.query('/api/2.0/engage/', params, {dataType: 'json'}).done(function(results) {
                   console.log(results);
                   console.log(results.values());
-                };
+                )};
                 console.log(peopleQuery);
                 console.log(peopleQuery.values());
                 promises.push(peopleQuery); 

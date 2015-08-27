@@ -30,6 +30,8 @@
             var i;
             var chartEvent = 'Viewed report';
             var chartData = {};
+            var page = 0;
+            var loops = 0;
             
             /* Make API Request for emails */
             var promises = [];
@@ -42,16 +44,26 @@
                 /* change params to include email */ 
                 params.where = '"' + listOfEmails[i] + '"' + ' in properties["$email"]';
                 peopleQuery = MP.api.query('/api/2.0/engage/', params, {dataType: 'json'}).done(function(results) {
-                  console.log(results);
-                  console.log(results.values());
+                  if(results['total'] > 1){
+                    // more than 1000
+                    params['session_id'] = results['session_id'];
+                    for(i=1; i<results['total']; i++) {
+                      params['page'] = i;
+                      promiselist.push(MP.api.people(params);
+                    }
+                  } else {
+                    //1000 or less
+                  }
                 });
-                console.log(peopleQuery);
-                console.log(peopleQuery.values());
-                promises.push(peopleQuery); 
+                //console.log(peopleQuery);
+                //console.log(peopleQuery.values());
+                //promises.push(peopleQuery); 
           
             }
             Promise.all(promises).then(function(datums){
-                /* Format data */  
+                /* Format data */
+                
+                console.log(datums);
                 
                 _.each(datums, function(datum){
                     results.push(datum.values()['results']);

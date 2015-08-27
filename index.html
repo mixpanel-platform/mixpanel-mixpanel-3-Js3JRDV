@@ -20,6 +20,7 @@
     var masterUsers = {};
     var masterProps = [];
     var total = 0;
+    var params = {where: ''};
     
       MP.api.ready(function() {
         /* pull values out of form */
@@ -36,9 +37,6 @@
             
             /* Make API Request for emails */
             var promises = [];
-            var params = {
-                where: '' 
-            }
             var results = [];
             for (i = 0; i < listOfEmails.length; i++){
               

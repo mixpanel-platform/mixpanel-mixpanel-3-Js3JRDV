@@ -49,11 +49,11 @@
                     params['session_id'] = results['session_id'];
                     for(i=1; i<results['total']; i++) {
                       params['page'] = i;
-                      promiselist.push(MP.api.people(params));
+                      promises.push(MP.api.people(params));
                     }
                   } else {
                     //1000 or less
-                    promiselist.push(MP.api.people(params));
+                    promises.push(MP.api.people(params));
                   }
                 });
                 //console.log(peopleQuery);

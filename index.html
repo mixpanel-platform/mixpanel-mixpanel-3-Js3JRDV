@@ -19,6 +19,8 @@
     
     var masterUsers = {};
     var masterProps = [];
+    var promises = [];
+    var results = [];
     var total = 0;
     var params = {where: ''};
     
@@ -53,10 +55,8 @@
         });
         
         var smallPeople = function() {
-          /* Make API Request for emails */
-            var promises = [];
-            var results = [];
             promises.push(MP.api.people(params));
+            
             Promise.all(promises).then(function(datums){
                 /* Format data */
                 
@@ -70,10 +70,6 @@
         }
         
         var largePeople = function(page) {
-           /* Make API Request for emails */
-            var promises = [];
-            var results = [];
-            
             promises.push(MP.api.people(params));
             
             if(page < total) {

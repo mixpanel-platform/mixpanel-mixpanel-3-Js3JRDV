@@ -64,6 +64,7 @@
         var smallPeople = function() {
           /* Make API Request for emails */
             var promises = [];
+            var results = [];
             promises.push(MP.api.people(params));
             Promise.all(promises).then(function(datums){
                 /* Format data */
@@ -82,6 +83,7 @@
         var largePeople = function() {
            /* Make API Request for emails */
             var promises = [];
+            var results = [];
             
             for(i=1; i<total; i++) {
               params['page'] = i;

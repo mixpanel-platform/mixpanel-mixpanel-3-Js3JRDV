@@ -44,7 +44,7 @@
               // more than 1000
               // params['session_id'] = results['session_id'];
               total = params['total'];
-              setTimeout(largePeople(), 1000);
+              setTimeout(largePeople(1), 1000);
             } else {
                 //1000 or less
               setTimeout(smallPeople(), 1000);
@@ -69,16 +69,15 @@
             });
         }
         
-        var largePeople = function() {
+        var largePeople = function(page) {
            /* Make API Request for emails */
             var promises = [];
             var results = [];
             
             promises.push(MP.api.people(params));
             
-            for(i=1; i<total; i++) {
-              params['page'] = i;
-              promises.push(MP.api.people(params));
+            if(page < total) {
+              largePeople(page + 1);
             }
             
             Promise.all(promises).then(function(datums){

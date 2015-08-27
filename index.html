@@ -45,7 +45,7 @@
                 peopleQuery = MP.api.query('/api/2.0/engage/', params, {dataType: 'json'}).done(function(results) {
                   if(results['total'] > 1){
                     // more than 1000
-                    params['session_id'] = results['session_id'];
+                    // params['session_id'] = results['session_id'];
                     total = params['total'];
                     setTimeout(largePeople(), 1000);
                   } else {
@@ -69,7 +69,7 @@
             Promise.all(promises).then(function(datums){
                 /* Format data */
                 
-                console.log(datums[0].values());
+                console.log(datums);
                 
                 _.each(datums, function(datum){
                     results.push(datum.values()['results']);

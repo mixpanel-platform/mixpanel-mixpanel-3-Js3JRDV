@@ -100,7 +100,7 @@
             masterUsers[current_user['$distinct_id']] = {};
             var propkeys = Object.keys(current_user['$properties']);
             for(j=0; j<propkeys.length; j++) {
-              masterUsers[current_user['$distinct_id']][propkeys[j]] = current_user['$properties'][propkeys[j]].toString() || "";
+              masterUsers[current_user['$distinct_id']][propkeys[j]] = current_user['$properties'][propkeys[j]];
               if(masterProps.indexOf(propkeys[j]) < 0) {
                 masterProps.push(propkeys[j]);
               }

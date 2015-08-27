@@ -28,7 +28,7 @@
             $('#lgr-chart').remove();
             e.preventDefault();
             var formData = $('#property input:first').val()
-            var listOfEmails = formData.split(' ');
+            var listOfEmails = formData;
             var i;
             var chartEvent = 'Viewed report';
             var chartData = {};
@@ -38,22 +38,18 @@
             /* Make API Request for emails */
             var promises = [];
             var results = [];
-            for (i = 0; i < listOfEmails.length; i++){
-              
-                /* change params to include email */ 
-                params.where = '"' + listOfEmails[i] + '"' + ' in properties["$email"]';
-                peopleQuery = MP.api.query('/api/2.0/engage/', params, {dataType: 'json'}).done(function(results) {
-                  if(results['total'] > 1000){
-                    // more than 1000
-                    // params['session_id'] = results['session_id'];
-                    total = params['total'];
-                    setTimeout(largePeople(), 1000);
-                  } else {
-                    //1000 or less
-                    setTimeout(smallPeople(), 1000);
-                  }
-                });
+            params.where = listOfEmails;
+            peopleQuery = MP.api.query('/api/2.0/engage/', params, {dataType: 'json'}).done(function(results) {
+            if(results['total'] > 1000){
+              // more than 1000
+              // params['session_id'] = results['session_id'];
+              total = params['total'];
+              setTimeout(largePeople(), 1000);
+            } else {
+                //1000 or less
+              setTimeout(smallPeople(), 1000);
             }
+          });
         });
         
         var smallPeople = function() {
